@@ -1,0 +1,21 @@
+name: SSO Trading Alerts
+on:
+  schedule:
+    - cron: "5 21 * * *"   # Runs daily at 4:05 PM ET (21:05 UTC)
+  workflow_dispatch:       # Lets you run it manually
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install ingredients
+        run: pip install -r requirements.txt
+
+      - name: Run Magic Code
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python sso_telegram_alerts.py
