@@ -9,7 +9,6 @@ TELEGRAM_TOKEN = os.environ['TELEGRAM_TOKEN']
 TELEGRAM_CHAT_ID = os.environ['TELEGRAM_CHAT_ID']
 
 def send_telegram_alert(message):
-    """Send message via Telegram bot"""
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     payload = {
         "chat_id": TELEGRAM_CHAT_ID,
@@ -17,14 +16,19 @@ def send_telegram_alert(message):
         "parse_mode": "Markdown"
     }
     response = requests.post(url, json=payload)
+    print("Telegram API Response:", response.json())  # Debug line
     return response.json()
 
 def check_signals():
     # Inside check_signals():
-    print("Latest SSO Price:", latest['price'])
-    print("Latest RSI:", latest['rsi'])
-    print("Latest VIX:", latest['vix'])
-    print("EMA Crossover:", latest['ema_cross'])
+    print("=== DEBUG DATA ===")
+    print(f"Latest SSO Price: {latest['price']}")
+    print(f"Latest RSI: {latest['si']}")  # Typo here: 'rsi' instead of 'si'
+    print(f"Latest VIX: {latest['vix']}")
+    print(f"EMA Crossover (50 > 200): {latest['ema_cross']}")
+    print(f"20-Day High: {latest['sso_high_20']}")
+    print(f"Price < 97% of High: {latest['price'] < 0.97 * latest['sso_high_20']}")
+    print("==================")
 
     message = "🚀 TEST ALERT: GitHub Actions is working!"
     send_telegram_alert(message)
@@ -79,13 +83,3 @@ def check_signals():
 
 # if __name__ == "__main__":
 #     check_signals()
-def send_telegram_alert(message):
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": message,
-        "parse_mode": "Markdown"
-    }
-    response = requests.post(url, json=payload)
-    print("Telegram API Response:", response.json())  # Debug line
-    return response.json()
