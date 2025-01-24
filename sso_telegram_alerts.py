@@ -21,7 +21,11 @@ def send_telegram_alert(message):
 
 def check_signals():
     # Inside check_signals():
-    # Comment out your actual logic and force a test alert
+    print("Latest SSO Price:", latest['price'])
+    print("Latest RSI:", latest['rsi'])
+    print("Latest VIX:", latest['vix'])
+    print("EMA Crossover:", latest['ema_cross'])
+
     message = "🚀 TEST ALERT: GitHub Actions is working!"
     send_telegram_alert(message)
 #     """Check SSO buy/sell conditions"""
@@ -75,3 +79,13 @@ def check_signals():
 
 # if __name__ == "__main__":
 #     check_signals()
+def send_telegram_alert(message):
+    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
+    payload = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": message,
+        "parse_mode": "Markdown"
+    }
+    response = requests.post(url, json=payload)
+    print("Telegram API Response:", response.json())  # Debug line
+    return response.json()
