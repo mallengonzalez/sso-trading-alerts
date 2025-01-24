@@ -1,8 +1,8 @@
 name: SSO Trading Alerts
 on:
   schedule:
-    - cron: "5 21 * * *"   # Runs daily at 4:05 PM ET (21:05 UTC)
-  workflow_dispatch:       # Lets you run it manually
+    - cron: "5 21 * * *"  # 4:05 PM ET (21:05 UTC)
+  workflow_dispatch:       # Manual trigger
 
 jobs:
   run-script:
@@ -11,10 +11,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install ingredients
-        run: pip install -r requirements.txt
+      - name: Set up Python 3.9  # Use Python 3.9 for compatibility
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
 
-      - name: Run Magic Code
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --no-cache-dir numpy==1.21.5
+          python -m pip install --no-cache-dir pandas==1.3.5
+          python -m pip install --no-cache-dir yfinance==0.2.28
+
+      - name: Run script
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
